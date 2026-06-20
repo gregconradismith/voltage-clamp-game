@@ -1,4 +1,4 @@
-# Voltage Clamp Game
+# The Voltage-Clamp Game
 
 A MATLAB-free browser version of `voltageclampgame.m`. The game shows voltage
 step currents and asks for the reversal potential. After each answer it reveals

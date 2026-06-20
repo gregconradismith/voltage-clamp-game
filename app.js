@@ -90,6 +90,10 @@ function generateRound() {
   const erev = randomChoice(erevList);
   const v0 = randomChoice(v0List);
   const v1 = randomChoice(v1List);
+  return buildRound({ erev, v0, v1 });
+}
+
+function buildRound({ erev, v0, v1, choices = null }) {
   const tau = Number(els.speedSlider.value);
   const traces = vtestList.map((vtest, index) => simulateTrace(vtest, erev, v0, v1, tau, traceColors[index]));
   const iv = traces.map(trace => ({
@@ -107,7 +111,7 @@ function generateRound() {
     minfCurve: voltage.map(v => minf(v, v0, v1)),
     driving: voltage.map(v => v - erev),
     currentCurve: voltage.map(v => minf(v, v0, v1) * (v - erev)),
-    choices: shuffledChoices(erev),
+    choices: choices ? choices.slice() : shuffledChoices(erev),
   };
 }
 
@@ -119,10 +123,11 @@ function simulateTrace(vtest, erev, v0, v1, tau, color) {
 
   time.forEach((t, index) => {
     const v = vCommand(t, vtest);
-    const target = minf(v, v0, v1);
     if (index > 0) {
       const dt = time[index] - time[index - 1];
-      m += ((target - m) / tau) * dt;
+      const intervalVoltage = vCommand(time[index - 1], vtest);
+      const target = minf(intervalVoltage, v0, v1);
+      m += (target - m) * (1 - Math.exp(-dt / tau));
     }
     const i = m * (v - erev);
     current.push(i);
@@ -134,7 +139,12 @@ function simulateTrace(vtest, erev, v0, v1, tau, color) {
 }
 
 function shuffledChoices(answer) {
-  return [answer, ...erevList.filter(value => value !== answer)].sort(() => Math.random() - 0.5);
+  const choices = [answer, ...erevList.filter(value => value !== answer)];
+  for (let i = choices.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choices[i], choices[j]] = [choices[j], choices[i]];
+  }
+  return choices;
 }
 
 function startRound() {
@@ -205,10 +215,12 @@ function answer(choice) {
   els.resultText.textContent = gotIt ? 'Correct!' : 'Not quite';
   els.resultDetail.textContent = `The sampled I-V relation crosses zero at ${state.roundData.erev} mV.`;
   els.promptText.textContent = gotIt
-    ? 'Right: clamp currents reverse sign at the reversal potential.'
+    ? celebratoryPrompt()
     : 'Compare which voltage steps produce inward versus outward current.';
   els.revealPanel.classList.toggle('is-correct', gotIt);
   els.revealPanel.classList.toggle('is-incorrect', !gotIt);
+  els.verdictBurst.classList.toggle('is-correct', gotIt);
+  els.verdictBurst.classList.toggle('is-incorrect', !gotIt);
   els.answerKey.hidden = false;
   els.revealPanel.hidden = false;
   renderAnswerKey();
@@ -228,6 +240,12 @@ function updateLabels() {
   els.scorePercent.textContent = state.attempts === 0
     ? '0%'
     : `${Math.round((state.correct / state.attempts) * 100)}%`;
+}
+
+function celebratoryPrompt() {
+  if (state.streak >= 5) return `Five in a row: you are reading the clamp family cleanly.`;
+  if (state.streak >= 3) return `Streak ${state.streak}. Inward and outward traces are sorting themselves out.`;
+  return 'Right: clamp currents reverse sign at the reversal potential.';
 }
 
 function renderAnswerKey() {
@@ -496,8 +514,7 @@ els.resetButton.addEventListener('click', resetGame);
 els.showProtocolCheckbox.addEventListener('change', draw);
 els.showIvCheckbox.addEventListener('change', draw);
 els.speedSlider.addEventListener('input', () => {
-  state.roundData = generateRound();
-  renderChoices();
+  state.roundData = buildRound(state.roundData);
   if (state.revealed) renderAnswerKey();
   draw();
 });

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef6fb">
+  <title>Further Reading: Voltage Clamp</title>
+  <link rel="stylesheet" href="styles.css?v=2026-06-20-reading">
+</head>
+<body>
+  <main class="reading-shell">
+    <article class="reading-page">
+      <p class="eyebrow">Further reading</p>
+      <h1>Voltage Clamp and Reversal Potentials</h1>
+      <p class="lede">
+        This game turns voltage-clamp traces into an inference problem: from a
+        family of currents measured at fixed command voltages, estimate the
+        voltage at which the current would reverse.
+      </p>
+
+      <section>
+        <h2>What voltage clamp does</h2>
+        <p>
+          A voltage clamp attempts to hold membrane voltage at a prescribed
+          command value while measuring the current needed to maintain that
+          voltage. In an ideal clamp, the recorded current is the negative of
+          the membrane ionic current under the chosen sign convention. The game
+          abstracts away the amplifier and shows the membrane current traces
+          directly.
+        </p>
+      </section>
+
+      <section>
+        <h2>The model in the game</h2>
+        <p>
+          The activation variable m relaxes toward
+          m<sub>inf</sub>(V) = 0.5(1 + tanh((V - V<sub>0</sub>)/V<sub>1</sub>)).
+          The current is
+          I<sub>mem</sub> = m(V,t)(V - E<sub>rev</sub>). Once activation has
+          settled enough, plotting sampled current against command voltage gives
+          an approximate I-V relation.
+        </p>
+      </section>
+
+      <section>
+        <h2>Reading the traces</h2>
+        <p>
+          Currents at command voltages below E<sub>rev</sub> have the opposite
+          sign from currents above E<sub>rev</sub>. If all tested commands lie on
+          one side of E<sub>rev</sub>, the answer requires extrapolation rather
+          than direct interpolation. That is realistic, but it is harder than
+          the rounds where the sampled currents visibly bracket zero.
+        </p>
+      </section>
+
+      <section>
+        <h2>Experimental caveats</h2>
+        <p>
+          Real voltage-clamp data can be distorted by series resistance,
+          capacitance transients, imperfect space clamp, leak subtraction, and
+          channel kinetics that are too fast for the clamp. The game omits
+          those complications so the central current-voltage logic is visible.
+        </p>
+      </section>
+
+      <section>
+        <h2>On-topic resources</h2>
+        <ul class="resource-list">
+          <li><a href="https://en.wikipedia.org/wiki/Voltage_clamp">Voltage clamp</a>: overview of the technique and its experimental purpose.</li>
+          <li><a href="https://en.wikipedia.org/wiki/Reversal_potential">Reversal potential</a>: the voltage where a membrane current reverses direction.</li>
+          <li><a href="https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model">Hodgkin-Huxley model</a>: conductance-based modeling built from voltage-clamp data.</li>
+          <li><a href="https://en.wikipedia.org/wiki/Nernst_equation">Nernst equation</a>: equilibrium potentials for single permeant ions.</li>
+        </ul>
+      </section>
+
+      <p class="back-link"><a href="index.html">Back to the game</a></p>
+    </article>
+  </main>
+</body>
+</html>

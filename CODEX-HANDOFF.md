@@ -1,4 +1,4 @@
-# Voltage Clamp Game Codex Handoff
+# The Voltage-Clamp Game Codex Handoff
 
 Date: 2026-06-18
 

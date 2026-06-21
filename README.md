@@ -7,11 +7,7 @@ curve.
 
 ## GitHub Pages
 
-Live app:
-
-```text
-https://gregconradismith.github.io/voltage-clamp-game/
-```
+Live app: [The Voltage-Clamp Game](https://gregconradismith.github.io/voltage-clamp-game/)
 
 Publish this folder as the root of a GitHub Pages repository. The app uses
 relative paths, so it can also run from a project Pages URL.
